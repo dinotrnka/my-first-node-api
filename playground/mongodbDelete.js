@@ -1,11 +1,12 @@
 // const MongoClient = require('mongodb').MongoClient;
 const { MongoClient, ObjectID } = require('mongodb');
 
-MongoClient.connect('mongodb://localhost:27017/TodoApi', (error, db) => {
+MongoClient.connect('mongodb://localhost:27017/TodoApi', (error, client) => {
   if (error) {
     return console.log('Unable to connect to Mongo DB server');
   }
   console.log('Connected to MongoDB server');
+  const db = client.db('TodoApp');
 
   db.collection('Todos')
     .deleteMany({ text: 'Eat ice cream'})
@@ -26,6 +27,4 @@ MongoClient.connect('mongodb://localhost:27017/TodoApi', (error, db) => {
     .then((result) => {
       console.log(result);
     });
-
-  db.close();
 });
