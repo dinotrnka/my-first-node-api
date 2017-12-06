@@ -7,17 +7,17 @@ MongoClient.connect('mongodb://localhost:27017/TodoApi', (error, db) => {
   }
   console.log('Connected to MongoDB server');
 
-  // db.collection('Todos')
-  //   .deleteMany({ text: 'Eat ice cream'})
-  //   .then((result) => {
-  //     console.log(result);
-  //   });
+  db.collection('Todos')
+    .deleteMany({ text: 'Eat ice cream'})
+    .then((result) => {
+      console.log(result);
+    });
 
-  // db.collection('Todos')
-  //   .deleteOne({text: 'Drive Porshe'})
-  //   .then((result) => {
-  //     console.log(result);
-  //   });
+  db.collection('Todos')
+    .deleteOne({text: 'Drive Porshe'})
+    .then((result) => {
+      console.log(result);
+    });
 
   db.collection('Todos')
     .findOneAndDelete({ 
