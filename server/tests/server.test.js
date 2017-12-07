@@ -10,7 +10,9 @@ const sampleTodos = [{
   text: 'Drink beer'
 }, {
   _id: new ObjectID(),
-  text: 'Eat meat'
+  text: 'Eat meat',
+  completed: true,
+  completedAt: 1512674270207
 }];
 
 beforeEach((done) => {
@@ -138,6 +140,42 @@ describe('DELETE /todos/:id', () => {
     request(app)
       .delete(`/todos/${id}`)
       .expect(404)
+      .end(done);
+  });
+});
+
+describe('PATCH /todos/:id', () => {
+  it('should update the todo', (done) => {
+    var id = sampleTodos[0]._id.toHexString();
+    var text = 'Smoke a cigar';
+    var completed = true;
+
+    request(app)
+      .patch(`/todos/${id}`)
+      .send({ text, completed })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo.text).toBe(text);
+        expect(res.body.todo.completed).toBe(true);
+        expect(typeof res.body.todo.completedAt).toBe('number');
+      })
+      .end(done);
+  });
+
+  it('should clear completedAt when todo is not completed', (done) => {
+    var id = sampleTodos[1]._id.toHexString();
+    var text = 'Drive a buggy';
+    var completed = false;
+
+    request(app)
+      .patch(`/todos/${id}`)
+      .send({ text, completed })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo.text).toBe(text);
+        expect(res.body.todo.completed).toBe(false);
+        expect(res.body.todo.completedAt).toBeFalsy();
+      })
       .end(done);
   });
 });
