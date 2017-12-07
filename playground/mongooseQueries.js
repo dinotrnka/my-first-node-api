@@ -32,8 +32,6 @@ Todo.findById(id).then((todo) => {
   console.log('Todo by ID', todo);
 }).catch((e) => console.log(e));
 
-
-
 User.findById('5a286144746af07349bb3bf4').then((user) => {
   if (!user) {
     return console.log('User ID not found');
