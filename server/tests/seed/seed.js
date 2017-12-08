@@ -1,7 +1,28 @@
 const { ObjectID } = require('mongodb');
-const { Todo } = require('./../../models/todo');
+const jwt = require('jsonwebtoken');
 
-const sampleTodos = [{
+const { Todo } = require('./../../models/todo');
+const { User } = require('./../../models/user');
+
+const userOneId = new ObjectID();
+const userTwoId = new ObjectID();
+const users = [{
+  _id: userOneId,
+  email: 'dinaga@gmail.com',
+  password: 'userOnePass',
+  tokens: [{
+    access: 'auth',
+    token: jwt
+      .sign({ _id: userOneId, access: 'auth' }, 'mojaslatkatajna')
+      .toString()
+  }]
+}, {
+  _id: userTwoId,
+  email: 'badguy@gmail.com',
+  password: 'userTwoPass'
+}];
+
+const todos = [{
   _id: new ObjectID(),
   text: 'Drink beer'
 }, {
@@ -12,10 +33,18 @@ const sampleTodos = [{
 }];
 
 const populateTodos = (done) => {
-  // Seed Todo collection with sampleTodos before each test
   Todo.remove({}).then(() => {
-    return Todo.insertMany(sampleTodos);
+    return Todo.insertMany(todos);
   }).then(() => done()); 
 };
 
-module.exports = { sampleTodos, populateTodos };
+const populateUsers = (done) => {
+  User.remove({}).then(() => {
+    var userOne = new User(users[0]).save();
+    var userTwo = new User(users[1]).save();
+
+    return Promise.all([userOne, userTwo]);
+  }).then(() => done()); 
+};
+
+module.exports = { todos, populateTodos, users, populateUsers };
