@@ -17,7 +17,7 @@
 					},
 					{
 						"key": "x-auth",
-						"value": "{{token}}"
+						"value": "{{x-auth}}"
 					}
 				],
 				"body": {
@@ -39,17 +39,6 @@
 		},
 		{
 			"name": "GET /todos/:id",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"postman.setGlobalVariable(\"id\", \"5a2bf6bed84c35d8be46632d\");"
-						]
-					}
-				}
-			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -59,7 +48,7 @@
 					},
 					{
 						"key": "x-auth",
-						"value": "{{token}}"
+						"value": "{{x-auth}}"
 					}
 				],
 				"body": {
@@ -67,13 +56,13 @@
 					"raw": "{\n\t\"text\": \"Pay some billz\"\n}"
 				},
 				"url": {
-					"raw": "{{url}}/todos/{{id}}",
+					"raw": "{{url}}/todos/{{lastTodoId}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"todos",
-						"{{id}}"
+						"{{lastTodoId}}"
 					]
 				},
 				"description": ""
@@ -84,11 +73,21 @@
 			"name": "POST /todos",
 			"event": [
 				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var body = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable('lastTodoId', body.todo._id);"
+						]
+					}
+				},
+				{
 					"listen": "prerequest",
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"postman.setGlobalVariable(\"text\", \"Kuzeeee!!!\");",
+							"postman.setGlobalVariable(\"text\", \"This is the last one I swear :)\");",
 							""
 						]
 					}
@@ -103,7 +102,7 @@
 					},
 					{
 						"key": "x-auth",
-						"value": "{{token}}"
+						"value": "{{x-auth}}"
 					}
 				],
 				"body": {
@@ -131,7 +130,6 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"postman.setGlobalVariable(\"id\", \"5a2bf6bed84c35d8be46632d\");",
 							"postman.setGlobalVariable(\"text\", \"Do something else\");",
 							"postman.setGlobalVariable(\"completed\", true);"
 						]
@@ -147,7 +145,7 @@
 					},
 					{
 						"key": "x-auth",
-						"value": "{{token}}"
+						"value": "{{x-auth}}"
 					}
 				],
 				"body": {
@@ -155,13 +153,13 @@
 					"raw": "{\n\t\"text\": \"{{text}}\",\n\t\"completed\": {{completed}}\n}"
 				},
 				"url": {
-					"raw": "{{url}}/todos/{{id}}",
+					"raw": "{{url}}/todos/{{lastTodoId}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"todos",
-						"{{id}}"
+						"{{lastTodoId}}"
 					]
 				},
 				"description": ""
@@ -170,17 +168,6 @@
 		},
 		{
 			"name": "DELETE /todos/:id",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"exec": [
-							"postman.setGlobalVariable(\"id\", \"5a2bf6bed84c35d8be46632d\");"
-						]
-					}
-				}
-			],
 			"request": {
 				"method": "DELETE",
 				"header": [
@@ -190,7 +177,7 @@
 					},
 					{
 						"key": "x-auth",
-						"value": "{{token}}"
+						"value": "{{x-auth}}"
 					}
 				],
 				"body": {
@@ -198,13 +185,13 @@
 					"raw": "{\n\t\"text\": \"Pay some billz\"\n}"
 				},
 				"url": {
-					"raw": "{{url}}/todos/{{id}}",
+					"raw": "{{url}}/todos/{{lastTodoId}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"todos",
-						"{{id}}"
+						"{{lastTodoId}}"
 					]
 				},
 				"description": ""
@@ -219,22 +206,8 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"tests[\"Status code is 200\"] = responseCode.code === 200;",
-							"",
-							"if (responseCode.code == 200) {",
-							"    try {",
-							"        var response = JSON.parse(responseBody);",
-							"        if (responseHeaders['x-auth']) {",
-							"            postman.setGlobalVariable(\"token\", responseHeaders['x-auth']);",
-							"        } else {",
-							"            postman.setGlobalVariable(\"token\", responseHeaders['X-Auth']);",
-							"        }",
-							"    }",
-							"    ",
-							"    catch(e) {",
-							"        console.log(e)",
-							"    }",
-							"}"
+							"var token = postman.getResponseHeader('x-auth');",
+							"postman.setEnvironmentVariable('x-auth', token);"
 						]
 					}
 				}
@@ -249,7 +222,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"liara@gmail.com\",\n\t\"password\": \"liara123\"\n}"
+					"raw": "{\n\t\"email\": \"tali@gmail.com\",\n\t\"password\": \"tali123\"\n}"
 				},
 				"url": {
 					"raw": "{{url}}/users",
@@ -271,7 +244,7 @@
 				"header": [
 					{
 						"key": "x-auth",
-						"value": "{{token}}"
+						"value": "{{x-auth}}"
 					}
 				],
 				"body": {},
@@ -297,22 +270,18 @@
 					"script": {
 						"type": "text/javascript",
 						"exec": [
-							"tests[\"Status code is 200\"] = responseCode.code === 200;",
-							"",
-							"if (responseCode.code == 200) {",
-							"    try {",
-							"        var response = JSON.parse(responseBody);",
-							"        if (responseHeaders['x-auth']) {",
-							"            postman.setGlobalVariable(\"token\", responseHeaders['x-auth']);",
-							"        } else {",
-							"            postman.setGlobalVariable(\"token\", responseHeaders['X-Auth']);",
-							"        }",
-							"    }",
-							"    ",
-							"    catch(e) {",
-							"        console.log(e)",
-							"    }",
-							"}"
+							"var token = postman.getResponseHeader('x-auth');",
+							"postman.setEnvironmentVariable('x-auth', token);"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"email\", \"dino@gmail.com\");",
+							"postman.setGlobalVariable(\"password\", \"dino123\");"
 						]
 					}
 				}
@@ -327,7 +296,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"dino@gmail.com\",\n\t\"password\": \"dino123\"\n}"
+					"raw": "{\n\t\"email\": \"{{email}}\",\n\t\"password\": \"{{password}}\"\n}"
 				},
 				"url": {
 					"raw": "{{url}}/users/login",
@@ -350,7 +319,7 @@
 				"header": [
 					{
 						"key": "x-auth",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YTJiZjBjZDYyYTYyZWQ2OGRlMmIwZmEiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTEyODI5NTk0fQ.sXq2akA5Byet85ycvIldUc04ENVTQha-r1Lpq5JvxsA"
+						"value": "{{x-auth}}"
 					}
 				],
 				"body": {
