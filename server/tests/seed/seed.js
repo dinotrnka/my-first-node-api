@@ -19,17 +19,25 @@ const users = [{
 }, {
   _id: userTwoId,
   email: 'badguy@gmail.com',
-  password: 'userTwoPass'
+  password: 'userTwoPass',
+  tokens: [{
+    access: 'auth',
+    token: jwt
+      .sign({ _id: userTwoId, access: 'auth' }, 'mojaslatkatajna')
+      .toString()
+  }]
 }];
 
 const todos = [{
   _id: new ObjectID(),
-  text: 'Drink beer'
+  text: 'Drink beer',
+  _creator: userOneId
 }, {
   _id: new ObjectID(),
   text: 'Eat meat',
   completed: true,
-  completedAt: 1512674270207
+  completedAt: 1512674270207,
+  _creator: userTwoId
 }];
 
 const populateTodos = (done) => {
