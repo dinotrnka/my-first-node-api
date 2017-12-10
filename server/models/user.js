@@ -103,7 +103,7 @@ UserSchema.statics.findByCredentials = function(email, password) {
   });
 };
 
-// middleware
+// middleware for saving (custom code that runs just before user.save())
 UserSchema.pre('save', function(next) {
   var user = this;
 
